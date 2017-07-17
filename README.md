@@ -29,6 +29,9 @@ This gives you the freedom of placing your `FooBar` class in any one of the abov
 without changing a single line anywhere in your source code! `FooBarBaz` would search in up to eight locations
 and `FooBarBazQux` would search in up to 16 locations, etc.
 
+If your class is in a namespace, the namespace will be inserted between the library directory and the search directories.
+e.g. `Baz\Qux\FooBar` would search in `lib/baz/qux/` onwards.
+
 If no matching file is found, autoloading continues with the next registered autoloader.
 This means that the Autoloader class can be extended with different options, running each one in turn.
 
@@ -38,12 +41,17 @@ has been called, and they can be disabled by calling `unregister()` on them.
     require_once 'second_autoloader.php';
     require_once 'last_autoloader.php';
     require_once 'first_autoloader.php';
-    
+
     FirstAutoloader::register();
     SecondAutoloader::register();
     LastAutoloader::register();
-    
+
     FirstAutoloader::unregister();
+
+If the magic `__autoload()` function has been defined but no other autoload functions are registered,
+`__autoload()` will be added to the start of the list. This means that older libraries that haven't been updated
+should not break, as long as `__autoload()` is only defined once in the entire codebase. Note that it is no longer recommended
+to use [`__autoload()`](http://php.net/manual/en/function.autoload.php) and it has been deprecated since PHP 7.2.
 
 There are two constants within the class: `PREPEND` and `APPEND` which can be overriden
 to add a string constant to the start and/or end of the filename, e.g. if `PREPEND = 'my_'`
@@ -65,11 +73,14 @@ You should have at least the following files:
 - `tests/unit/AutoloaderTest.php`
 - `tests/unit/DirectoryListTest.php`
 - `tests/unit/PathGeneratorTest.php`
+- `tests/unit/autoloader_bad_exception.php`
 - `tests/unit/autoloader_seam.php`
 - `tests/unit/directory_list_seam.php`
 - `tests/unit/path_generator_seam.php`
+- `tests/unit/test_autoloader_exception.php`
 - `tests/unit/autoloader_test_first_class.php`
 - `tests/unit/autoloader/test/second/autoloader_test_second_class.php`
+- `tests/unit/autoloader/testnamespace/test_class.php`
 
 plus other files required for Codeception. The code is tested with [Codeception 2.2.6](http://codeception.com/builds).
 You will need the 2.2.6 version of Codeception's `.phar` file to run the tests.
