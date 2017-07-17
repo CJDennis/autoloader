@@ -38,15 +38,21 @@ This means that the Autoloader class can be extended with different options, run
 The derived classes can be loaded in any order. They will not take effect until their `register()` method
 has been called, and they can be disabled by calling `unregister()` on them.
 
-    require_once 'second_autoloader.php';
-    require_once 'last_autoloader.php';
-    require_once 'first_autoloader.php';
+```php
+<?php
+require_once 'second_autoloader.php';
+require_once 'last_autoloader.php';
+require_once 'first_autoloader.php';
 
-    FirstAutoloader::register();
-    SecondAutoloader::register();
-    LastAutoloader::register();
+FirstAutoloader::register();
+SecondAutoloader::register();
+LastAutoloader::register();
 
-    FirstAutoloader::unregister();
+FirstAutoloader::unregister();
+
+// 'my_fabulous_class.php' doesn't need to be included or required before the next line
+$my_fabulous_class = new MyFabulousClass;
+```
 
 If the magic `__autoload()` function has been defined but no other autoload functions are registered,
 `__autoload()` will be added to the start of the list. This means that older libraries that haven't been updated
