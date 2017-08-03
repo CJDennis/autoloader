@@ -19,7 +19,6 @@ class PathGenerator {
   }
 
   public function get_first_existing_filename() {
-  //public function load_first_match_in_directories() {
     foreach ($this->base_directories as $base_directory) {
       $max = pow(2, count($this->words));
       for ($i = 0; $i < $max;) {

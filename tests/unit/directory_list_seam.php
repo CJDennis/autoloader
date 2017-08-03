@@ -6,12 +6,12 @@ class DirectoryListSeam extends DirectoryList {
     return parent::get_real_path($path);
   }
 
-  public function get_include_current_directory() {
-    return $this->include_current_directory;
+  public function get_include_global_include_paths() {
+    return $this->include_global_include_paths;
   }
 
   public function clear_search_directory_lists() {
-    $this->before_current_directory = [];
-    $this->after_current_directory = [];
+    $this->before_global_include_paths = [];
+    $this->after_global_include_paths = [];
   }
 }

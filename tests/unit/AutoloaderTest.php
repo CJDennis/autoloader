@@ -40,8 +40,8 @@ class AutoloaderTest extends \Codeception\Test\Unit {
       throw new \PHPUnit_Framework_SkippedTestError("class {$class_name} is already defined");
     }
     $directory_list_seam = AutoloaderSeam::get_directory_list();
-    $directory_list_seam->include_current_directory();
-    $directory_list_seam->exclude_current_directory();
+    $directory_list_seam->include_global_include_paths();
+    $directory_list_seam->exclude_global_include_paths();
     $directory_list_seam->clear_search_directory_lists();
     $directory_list_seam->remove_search_directory('tests/unit');
     $directory_list_seam->add_search_directory_before_current('/fake/path');
@@ -59,7 +59,7 @@ class AutoloaderTest extends \Codeception\Test\Unit {
       throw new \PHPUnit_Framework_SkippedTestError("class {$class_name} is already defined");
     }
     $directory_list_seam = AutoloaderSeam::get_directory_list();
-    $directory_list_seam->exclude_current_directory();
+    $directory_list_seam->exclude_global_include_paths();
     $directory_list_seam->clear_search_directory_lists();
     $directory_list_seam->add_search_directory_after_current('tests/unit');
     $this->assertTrue(class_exists($class_name));
@@ -74,7 +74,7 @@ class AutoloaderTest extends \Codeception\Test\Unit {
       throw new \PHPUnit_Framework_SkippedTestError("class {$class_name} is already defined");
     }
     $directory_list_seam = AutoloaderSeam::get_directory_list();
-    $directory_list_seam->exclude_current_directory();
+    $directory_list_seam->exclude_global_include_paths();
     $directory_list_seam->clear_search_directory_lists();
     $directory_list_seam->add_search_directory_before_current('tests/unit');
     $this->assertFalse(class_exists($class_name));
@@ -179,13 +179,10 @@ class AutoloaderTest extends \Codeception\Test\Unit {
       throw new \PHPUnit_Framework_SkippedTestError("class {$class_name} is already defined");
     }
     $directory_list_seam = AutoloaderSeam::get_directory_list();
-    $directory_list_seam->exclude_current_directory();
+    $directory_list_seam->exclude_global_include_paths();
     $directory_list_seam->clear_search_directory_lists();
     $directory_list_seam->add_search_directory_after_current('tests/unit');
     $this->assertTrue(class_exists($class_name));
     AutoloaderSeam::unregister();
-
-    //new Autoloader\TestNamespace\TestClass;
-    //$this->assertTrue(class_exists('Autoloader\TestNamespace\TestClass'));
   }
 }

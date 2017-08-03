@@ -50,7 +50,7 @@ LastAutoloader::register();
 
 FirstAutoloader::unregister();
 
-// 'my_fabulous_class.php' doesn't need to be included or required before the next line
+// 'my_fabulous_class.php' doesn't need to be `include`d or `require`d before the next line
 $my_fabulous_class = new MyFabulousClass;
 ```
 
@@ -88,8 +88,8 @@ You should have at least the following files:
 - `tests/unit/autoloader/test/second/autoloader_test_second_class.php`
 - `tests/unit/autoloader/testnamespace/test_class.php`
 
-plus other files required for Codeception. The code is tested with [Codeception 2.2.6](http://codeception.com/builds).
-You will need the 2.2.6 version of Codeception's `.phar` file to run the tests.
+plus other files required for Codeception. The code is tested with [Codeception 2.3.4](http://codeception.com/builds).
+Any 2.2.x or 2.3.x version of Codeception's `.phar` file should be able to run the tests, possibly other versions too.
 
 - `php path/to/codecept.phar run unit` - to run tests for all classes
 - `php path/to/codecept.phar run unit AutoloaderTest` - to run the tests in the named file only

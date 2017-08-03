@@ -2,28 +2,28 @@
 // A class for lists of directories, not for directory listings!
 
 class DirectoryList {
-  protected $include_current_directory = false;
-  protected $before_current_directory = [];
-  protected $after_current_directory = [];
+  protected $include_global_include_paths = false;
+  protected $before_global_include_paths = [];
+  protected $after_global_include_paths = [];
 
-  public function include_current_directory() {
-    $this->include_current_directory = true;
+  public function include_global_include_paths() {
+    $this->include_global_include_paths = true;
   }
 
-  public function exclude_current_directory() {
-    $this->include_current_directory = false;
+  public function exclude_global_include_paths() {
+    $this->include_global_include_paths = false;
   }
 
   public function add_search_directory_before_current($directory) {
     $real_path = $this->get_real_path($directory);
     $this->remove_real_path($real_path);
-    $this->before_current_directory[] = $real_path;
+    $this->before_global_include_paths[] = $real_path;
   }
 
   public function add_search_directory_after_current($directory) {
     $real_path = $this->get_real_path($directory);
     $this->remove_real_path($real_path);
-    $this->after_current_directory[] = $real_path;
+    $this->after_global_include_paths[] = $real_path;
   }
 
   public function remove_search_directory($directory) {
@@ -33,8 +33,23 @@ class DirectoryList {
 
   protected function remove_real_path($real_path) {
     $path_pattern = preg_quote($real_path, '/');
-    $this->before_current_directory = preg_grep("/^{$path_pattern}$/", $this->before_current_directory, PREG_GREP_INVERT);
-    $this->after_current_directory = preg_grep("/^{$path_pattern}$/", $this->after_current_directory, PREG_GREP_INVERT);
+    $this->before_global_include_paths = preg_grep("/^{$path_pattern}$/", $this->before_global_include_paths, PREG_GREP_INVERT);
+    $this->after_global_include_paths = preg_grep("/^{$path_pattern}$/", $this->after_global_include_paths, PREG_GREP_INVERT);
+  }
+
+  public function get_directory_list() {
+    $directory_list = $this->before_global_include_paths;
+    if ($this->include_global_include_paths || !count($this->before_global_include_paths) && !count($this->after_global_include_paths)) {
+      $directory_list = array_merge($directory_list, $this->get_current_include_paths());
+    }
+    $directory_list = array_merge($directory_list, $this->after_global_include_paths);
+    return $directory_list;
+  }
+
+  protected function get_current_include_paths() {
+    $include_paths = explode(PATH_SEPARATOR, get_include_path());
+    $include_paths = array_map([$this, 'get_real_path'], $include_paths);
+    return $include_paths;
   }
 
   protected function get_real_path($path) {
@@ -58,19 +73,5 @@ class DirectoryList {
       $real_path = $path;
     }
     return $real_path;
-  }
-
-  public function get_directory_list() {
-    $directory_list = $this->before_current_directory;
-    if ($this->include_current_directory || !count($this->before_current_directory) && !count($this->after_current_directory)) {
-      $directory_list[] = $this->get_current_directory();
-    }
-    $directory_list = array_merge($directory_list, $this->after_current_directory);
-    return $directory_list;
-  }
-
-  // Wrapping the file system functions allows mocking this class in Unit Tests
-  protected function get_current_directory() {
-    return getcwd();
   }
 }

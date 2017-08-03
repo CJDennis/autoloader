@@ -22,6 +22,8 @@ modules:
             dump: tests/_data/dump.sql
 coverage:
     enabled: true
+    low_limit: 60
+    high_limit: 90    
     remote: false
     blacklist:
         include:
